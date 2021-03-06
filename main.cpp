@@ -23,6 +23,7 @@ using std::unordered_map;
 class Ssum {
   vector<unordered_map<int, bool>> &f;
  public:
+  explicit Ssum(vector<unordered_map<int, bool>> &f) : f(f) {}
   unsigned long num_table_entries() {
 	unsigned int total = 0;
 	for (int i = 0; i < this->f.size(); i++) {
@@ -45,7 +46,18 @@ class Ssum {
 	}
 	return f[n - 1][tgt];
   }
-  explicit Ssum(vector<unordered_map<int, bool>> &f) : f(f) {}
+  int num_solutions() {
+	// TODO
+  }
+  int smallest_subset() {
+	// TODO
+  }
+  int num_smallest_subsets() {
+	// TODO
+  }
+  int lex_first_solution() {
+	// TODO
+  }
 
 };
 
@@ -55,6 +67,7 @@ int main(int argc, char *argv[]) {
   char buf[11];
   int success;
   vector<unsigned int> numbers;
+  // Dimensions S[1..N][0..T]
   vector<unordered_map<int, bool>> f;
   unordered_map<int, bool> dummy;
 
@@ -82,10 +95,10 @@ int main(int argc, char *argv[]) {
   printf("--------------------------------------------\n");
 
   if (ssum.feasible(numbers, n, target)) {
-	std::cout << "Number of distinct solutions:\t\t\t";
-	std::cout << "Size of smallest satisfying subset:\t\t";
-	std::cout << "Number of min-size satisfying subsets:\t";
-	std::cout << "Lexicographically first min-sized solution:";
+	std::cout << "Number of distinct solutions:\t\t\t" << ssum.num_solutions();
+	std::cout << "Size of smallest satisfying subset:\t\t" << ssum.smallest_subset();
+	std::cout << "Number of min-size satisfying subsets:\t" << ssum.num_smallest_subsets();
+	std::cout << "Lexicographically first min-sized solution:" << ssum.lex_first_solution();
   } else
-	std::cout << "INFEASIBLE;";
+	std::cout << "INFEASIBLE";
 }
