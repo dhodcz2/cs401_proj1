@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <vector>
 #include <iostream>
+#include <string>
 
 bool Greedy = true;
 using std::vector;
@@ -22,8 +23,12 @@ using std::unordered_map;
 
 class Ssum {
   vector<unordered_map<int, bool>> &f;
+  vector<unsigned int> &a;
+  const unsigned int N;
  public:
-  explicit Ssum(vector<unordered_map<int, bool>> &f) : f(f) {}
+//  Ssum(vector<unordered_map<int, bool>> &f, unsigned int N) : f(f), N(N) {}
+  Ssum(vector<unordered_map<int, bool>> &f, vector<unsigned int> &a, unsigned int N)
+	  : f(f), a(a), N(N) {};
   unsigned long num_table_entries() {
 	unsigned int total = 0;
 	for (int i = 0; i < this->f.size(); i++) {
@@ -31,7 +36,18 @@ class Ssum {
 	}
 	return total;
   }
-  bool feasible(vector<unsigned int> &a, int n, unsigned int tgt) {
+  void print() {
+	std::string column_header = "\t";
+	for (auto &y: f) {
+	  std::string s;
+	  std::vector<bool> values;
+//	  for (auto &x: y)
+//		values.push_back(x);
+//	  for (auto &x:)
+
+	}
+  }
+  bool feasible(int n, unsigned int tgt) {
 	if ((n == 0 and tgt > 0) or tgt < 0)
 	  return false;
 	if (tgt == 0)
@@ -40,9 +56,9 @@ class Ssum {
 	  return f[n - 1][tgt];
 	else {
 	  if (Greedy)
-		f[n - 1][tgt] = feasible(a, n - 1, tgt - a[n - 1]) or feasible(a, n - 1, tgt);
+		f[n - 1][tgt] = feasible( n - 1, tgt - a[n - 1]) or feasible( n - 1, tgt);
 	  else
-		f[n - 1][tgt] = feasible(a, n - 1, tgt) or feasible(a, n - 1, tgt - a[n - 1]);
+		f[n - 1][tgt] = feasible(n - 1, tgt) or feasible( n - 1, tgt - a[n - 1]);
 	}
 	return f[n - 1][tgt];
   }
@@ -62,7 +78,6 @@ class Ssum {
 };
 
 int main(int argc, char *argv[]) {
-  int max_n, n;
   unsigned int target, *a, val;
   char buf[11];
   int success;
@@ -81,20 +96,22 @@ int main(int argc, char *argv[]) {
 	Greedy = false;
   }
 
-  n = 0;
+  int n = 0;
   while (scanf("%u", &val) == 1) {
 	scanf("%10s", buf);
 	numbers.push_back(val);
 	f.push_back(dummy);
 	n++;
   }
-  Ssum ssum(f);
+  Ssum ssum(f, numbers, n);
+
   printf("---- successfully read problem instance ----\n");
   printf("        n:      %i                          \n", n);
   printf("----    target: %i                          \n", target);
   printf("--------------------------------------------\n");
 
-  if (ssum.feasible(numbers, n, target)) {
+//  if (ssum.feasible(numbers, n, target)) {
+  if (ssum.feasible( n, target)) {
 	std::cout << "Number of distinct solutions:\t\t\t" << ssum.num_solutions();
 	std::cout << "Size of smallest satisfying subset:\t\t" << ssum.smallest_subset();
 	std::cout << "Number of min-size satisfying subsets:\t" << ssum.num_smallest_subsets();
