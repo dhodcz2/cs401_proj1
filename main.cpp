@@ -23,11 +23,11 @@ using std::unordered_map;
  */
 
 class Ssum {
-  unordered_map<int, pair<int, string>> dict;
-  const unsigned int N;
-  vector<unsigned int> a;
-  vector<unordered_map<int, bool>> f;
-  unordered_map<int, bool> dummy;
+  unordered_map<int, pair<int, string>> dict;		// {index: [number, string]}
+  const unsigned int N; 							// size of array
+  vector<unsigned int> a;							// array
+  vector<unordered_map<int, bool>> f;				// feasible matrix
+  unordered_map<int, bool> dummy;					// dummy map
  public:
   Ssum(vector<pair<int, string>> &parsed) : N(parsed.size()) {
 	int n = 0;
