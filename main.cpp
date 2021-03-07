@@ -61,12 +61,31 @@ class Ssum {
   }
   int num_solutions() {
 	// TODO
+	if ((n == 0 and T > 0) or T < 0)
+	  return 0;
+	if (T == 0)
+	  return 1;
+	return num_solutions(n - 1, T) + num_solutions(n - 1, T - a[n - 1]);
 	return 0;
   }
   int smallest_subset() {
+	int smallest_subset(int n, int T) {
 	// TODO
-	return 0;
-  }
+    int element_size = n.size();
+    int small_length = numeric_limits<int>::max();
+    for (int i = 0; i < element_size && small_length > 1; i++) {
+      int sum = 0;
+      for (int j = i; j < t; j++) {
+        sum += n[j]
+        if (sum >= T) {
+          small_length = min(small_length, j - i + 1);
+          break;
+        }
+      }
+      }
+        return small_length == numeric_limits<int>::max() ? small_length;
+    }
+	  
   int num_smallest_subsets() {
 	// TODO
 	return 0;
