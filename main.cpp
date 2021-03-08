@@ -34,7 +34,7 @@ class Ssum {
   vector<element> elements;
 
   vector<vector<unsigned long long>> distinct;
-  vector<vector<unsigned long long>> sum;
+  vector<vector<unsigned long long>> sum_distinct;
   vector<vector<vector<int>>> min_subsets;
   vector<vector<unsigned long long>> num_min_subsets;
  public:
@@ -79,20 +79,20 @@ class Ssum {
 
   void build() {
 	distinct.resize(N);
-	sum.resize(N);
+	sum_distinct.resize(N);
 	min_subsets.resize(N);
 	num_min_subsets.resize(N);
 
 	// inductive case : number of distinct subsets
 	// distinct[i][T] show number of subsets that achieve sum of t, having i-th element as last
-	// sum[i][t] stores sum of distinct[0...i-1][t] for easier calculations
+	// sum_distinct[i][t] stores sum of all distinct[0...i-1][t] for easier calculations
 	// min_subsets[i][T] stores minimial subset that achieves sum t with elements smaller than or equal to i
 	// num_min_subsets [i][t] stores number of such minimal subsets
 
 	// Initialize matrices
 	for (int i = 0; i < N; i++) {
 	  distinct[i].resize(T + 1, 0);
-	  sum[i].resize(T + 1, 0);
+	  sum_distinct[i].resize(T + 1, 0);
 	  min_subsets[i].resize(T + 1);
 	  num_min_subsets[i].resize(T + 1);
 	}
@@ -100,7 +100,7 @@ class Ssum {
 	// Construct base case
 	if (elements[0].val <= T) {
 	  distinct[0][elements[0].val] = 1;                    // 1 distinct way to order the first element
-	  sum[0][elements[0].val] = 1;                    // 1 total element needed to get to the first element
+	  sum_distinct[0][elements[0].val] = 1;                    // 1 total element needed to get to the first element
 	  min_subsets[0][elements[0].val].push_back(0);    // the first element is smallest subset to get first element
 	  num_min_subsets[0][elements[0].val] = 1;        //  one way to store minimal subset
 	}
@@ -117,14 +117,14 @@ class Ssum {
 		} else if (elements[i].val == t) {
 		  // subset contains only one element and achieves sum t
 		  distinct[i][t] = 1;
-		  sum[i][t]++;
-		  num_min_subsets[i][t] = 1;
+		  sum_distinct[i][t]++;
 		  min_subsets[i][t] = vector<int>{i};
+		  num_min_subsets[i][t] = 1;
 
 		} else {
 		  // subset contains other elements, we know how much from sum[i-1][t-elem[i]]
 		  int prev_t = t - elements[i].val;
-		  distinct[i][t] = sum[i - 1][prev_t]; // If there are previously sum many solutions,
+		  distinct[i][t] = sum_distinct[i - 1][prev_t]; // If there are previously sum many solutions,
 		  // the include case will make them all unique.
 
 		  if (min_subsets[i - 1][prev_t].empty()) {
@@ -153,14 +153,15 @@ class Ssum {
 		  }
 		}
 		// recalculate sum for current step
-		sum[i][t] = sum[i - 1][t] + distinct[i][t];
+		sum_distinct[i][t] = sum_distinct[i - 1][t] + distinct[i][t];
 	  }
 	}
   }
 
   // The number of distinct subsets that yield a sum of T (of any size)
-  unsigned long long get_num_solutions() {
-	return sum[N - 1][T];
+  unsigned long long get_num_distinct_solutions() {
+	return sum_distinct[N - 1][T];
+//	return distinct[N-1][T]; // Distinct would only imply that the solution includes elements[N-1]
   }
 
   unsigned long long get_smallest_subset() {
@@ -197,10 +198,12 @@ int main(int argc, char *argv[]) {
   Ssum ssum(argv[1]);
   if (ssum.feasible(ssum.N, ssum.T)) {
 	ssum.build();
-	cout << "Number of distinct solutions:\t\t\t\t" << ssum.get_num_solutions() << endl;
+	cout << "Number of distinct solutions:\t\t\t\t" << ssum.get_num_distinct_solutions() << endl;
 	cout << "Size of smallest satisfying subset:\t\t\t" << ssum.get_smallest_subset() << endl;
 	cout << "Number of min-size satisfying subsets:\t\t" << ssum.get_num_smallest_solutions() << endl;
 	cout << "Lexicographically first min-sized solution:\t" << ssum.get_lex_first_solution() << endl;
+  } else {
+	cout << "INFEASIBLE";
   }
 
 }
