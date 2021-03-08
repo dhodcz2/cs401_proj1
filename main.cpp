@@ -198,8 +198,9 @@ int main(int argc, char *argv[]) {
   Ssum ssum(argv[1]);
   if (ssum.feasible(ssum.N, ssum.T)) {
 	ssum.build();
-	cout << "Number of distinct solutions:\t\t\t\t" << ssum.get_num_distinct_solutions() << endl;
-	cout << "Size of smallest satisfying subset:\t\t\t" << ssum.get_smallest_subset() << endl;
+	cout << "Target sum of " << ssum.T << " is FEASIBLE" << endl;
+	cout << "Number of distinct solutions:\t\t\t" << ssum.get_num_distinct_solutions() << endl;
+	cout << "Size of smallest satisfying subset:\t\t" << ssum.get_smallest_subset() << endl;
 	cout << "Number of min-size satisfying subsets:\t\t" << ssum.get_num_smallest_solutions() << endl;
 	cout << "Lexicographically first min-sized solution:\t" << ssum.get_lex_first_solution() << endl;
   } else {
