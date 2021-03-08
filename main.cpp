@@ -72,10 +72,7 @@ class Ssum {
 	  return f[n - 1][t];
 	} else {
 	  f[n - 1][t] = feasible(n - 1, t) or feasible(n - 1, t - elements[n - 1].val);
-//	  f[n - 1][t] = feasible(n - 1, t) or feasible(n - 1, t - a[n - 1]);
 
-//	  bool exclude_case = feasible(n - 1, t);
-//	  bool include_case = feasible(n - 1, t - a[n - 1]);
 	}
 	return f[n - 1][t];
   }
@@ -112,6 +109,7 @@ class Ssum {
 		// Copy min subset from previous level
 		min_subsets[i][t] = min_subsets[i - 1][t];
 		num_min_subsets[i][t] = num_min_subsets[i - 1][t];
+		// Then check it
 
 		if (elements[i].val > t) {
 		  // elements[x] is unachievable
@@ -126,7 +124,8 @@ class Ssum {
 		} else {
 		  // subset contains other elements, we know how much from sum[i-1][t-elem[i]]
 		  int prev_t = t - elements[i].val;
-		  distinct[i][t] = sum[i - 1][prev_t];
+		  distinct[i][t] = sum[i - 1][prev_t]; // If there are previously sum many solutions,
+		  // the include case will make them all unique.
 
 		  if (min_subsets[i - 1][prev_t].empty()) {
 //			 cannot start nonempty sum with empty subset
@@ -139,27 +138,11 @@ class Ssum {
 			num_min_subsets[i][t] = num_min_subsets[i - 1][prev_t];
 
 		  } else if (min_subsets[i - 1][prev_t].size() + 1 == min_subsets[i][t].size()) {
-			// if the previous subset is equal with this element included would be equal to subset in size
-			// tmp subset, to compaer minimal on previous step with minimal from prev_t
-//			vector<int> temp_subset = min_subsets[i - 1][prev_t];
-//			temp_subset.push_back(i);
-//			// show if current subset is lexico smaller than previous
-//			bool cur_less = false;
-//			for (int j = 0; j < min_subsets[i][t].size() and not cur_less; j++) {
-//			  if (min_subsets[i][t][j] < temp_subset[j])
-//				cur_less = true;
-//			  else if (min_subsets[i][t][j] > temp_subset[j])
-//				break;
-//			}
-//			if (not cur_less)
-//			  min_subsets[i][t] = temp_subset;
-//			num_min_subsets[i][t]++;
-
 			auto lex_smaller = [&](vector<int> &first, vector<int> &second) {
 			  auto f = first.begin();
 			  auto s = second.begin();
 			  while (f != first.end() and s != second.end()) {
-				if (*(f++) >= *(s++))
+				if (*(f++) > *(s++)) // could be >=?
 				  return false;
 				return true;
 			  }
