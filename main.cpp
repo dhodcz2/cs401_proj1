@@ -144,8 +144,8 @@ class Ssum {
 			  while (f != first.end() and s != second.end()) {
 				if (*(f++) > *(s++)) // could be >=?
 				  return false;
-				return true;
 			  }
+			  return true;
 			};
 			if (lex_smaller(min_subsets[i - 1][t], min_subsets[i][t]))
 			  min_subsets[i][t] = min_subsets[i - 1][t];
